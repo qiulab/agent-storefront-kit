@@ -30,8 +30,12 @@ The project is deployed on Vercel and designed around Agents & Factories and the
 
 ## Development and boundaries
 
-`pnpm install --frozen-lockfile`, then `pnpm dev` (port 3000). `pnpm check`, `pnpm test`, and `pnpm build` validate the source. The regression suite currently has **21 passing tests**. Vercel function imports use Node-compatible `.js` specifiers; the compiled Node ESM API tree was smoke-tested locally.
+`pnpm install --frozen-lockfile`, then `pnpm dev` (port 3000). `pnpm check`, `pnpm test`, and `pnpm build` validate the source. The regression suite currently has **24 passing tests**. Vercel function imports use Node-compatible `.js` specifiers; the compiled Node ESM API tree was smoke-tested locally.
 
 No cart, checkout, order, purchase, or live merchant edit is performed. Manual public-HTML history is browser-local. Public fetches validate and pin DNS, reject private networks, and bound redirects, size, timeout, rate, and concurrency. Gateway rate limits are per runtime instance, not a durable account-wide spending cap. API keys and cron secrets are server-only and never committed.
 
 Official references: [event resources](https://vercel.notion.site/Builder-Resources-Fast-Forward-3f3e06b059c4818eba9ada18e6f32dc0), [Shop MCP](https://shop.dev/docs/quickstart), [AI Gateway](https://vercel.com/docs/ai-gateway/openai-compat).
+
+## Merchant-facing refinement
+
+The overview keeps the original store-check score but no longer shows a simulated preview score. The single-line workflow appears above the heading. Body text is 16px, evidence copy 14px, and secondary text uses stronger contrast. Merchant fixes arrive as website-linked policy excerpts or explicitly hypothetical suggestions. All proposed controls remain drafts until **Use these details in preview** is clicked; edited website drafts keep the original excerpt available for comparison. Unknown stock requires a separate merchant confirmation, and sold-out items stay excluded. The preview hides provider names, model/token telemetry, and execution jargon while retaining the one-call bounded semantic comparison when configured. Policy drafting uses public HTML, not a model. The Motoring Club lookup found no extractable policy passages, so it correctly presents suggestions rather than fabricated website terms.

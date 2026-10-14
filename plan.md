@@ -34,3 +34,13 @@ Three candidate styles: warm merchant studio (0.06), crisp electric-cobalt produ
 - `api/` and `vercel.json`: Vercel function wrappers, 60-second bounded execution, and protected 09:00 UTC daily audit.
 
 No new imagery, model calls, or purchases are needed for the redesign. Existing illustrative demo product images and live merchant images remain in their planned product/evidence placements. Preserve live Gateway secrets and all existing app functionality.
+
+## Merchant-facing refinement
+
+The approved refinement removes the simulated preview score from the overview while retaining the original store-check score. Place one concise horizontal workflow at the very top: **1 Check your store → 2 Review missing details → 3 Preview improvements**. Increase interface text sizes and contrast consistently, including secondary text, source labels, and field notes.
+
+Merchant fixes should arrive prefilled. Add a bounded public-website policy lookup that extracts actual shipping/return passages and follows at most two relevant same-store policy links. Every prefill distinguishes **From your website** (with the exact source URL) from **Suggested draft—review before using**. Do not infer real return windows, fees, shipping thresholds, or stock. Keep drafts separate from applied preview controls until the merchant clicks **Use these details in preview**. Unknown inventory is not auto-confirmed; existing sold-out items remain excluded.
+
+The preview should speak to merchants: customer question, current details, proposed details, and why the answer changes. Hide Gateway, model, token, latency, protocol, deterministic-engine labels and execution jargon from the preview. Retain the existing bounded semantic-comparison backend and fallback, invoked only when the merchant runs a preview; no extra model calls are needed to create policy drafts.
+
+Add `server/policyDrafts.ts`, `api/policies.ts`, and a focused `client/src/components/MerchantFixes.tsx`. Keep the existing source-of-truth audit, Shop catalog, Vercel configuration, and protected daily checks unchanged.

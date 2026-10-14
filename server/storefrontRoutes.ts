@@ -4,6 +4,7 @@ import { analyzeStore } from './audit.js';
 import { shopAudit } from './shopMcp.js';
 import { demoAudit } from './demo.js';
 import { gatewayCompare, gatewayStatus } from './gatewayShopper.js';
+import { policyDraftsFor } from './policyDrafts.js';
 const inputSchema=z.object({url:z.string().min(3).max(2000),shopify:z.boolean().optional(),query:z.string().max(200).optional()});
 export function registerStorefrontRoutes(app:Express) {
   let active=0; const limits=new Map<string,{count:number,until:number}>();
@@ -18,6 +19,15 @@ export function registerStorefrontRoutes(app:Express) {
     try {res.set('Cache-Control','no-store').json(await (input.data.shopify?shopAudit(input.data.url,input.data.query):analyzeStore(input.data.url)));}
     catch(e) {res.status(422).json({error:e instanceof Error?e.message:'The storefront could not be audited.'});}
     finally {active--;}
+  });
+  app.post('/api/policies',async(req,res)=>{
+    const input=inputSchema.safeParse(req.body);if(!input.success){res.status(400).json({error:'Enter a public storefront URL.'});return;}
+    const ip='policies:'+(req.ip||'unknown');const previous=limits.get(ip);const current=previous&&previous.until>Date.now()?previous:{count:0,until:Date.now()+60000};current.count++;limits.set(ip,current);
+    if(active>=4||current.count>6){res.status(429).json({error:'Please wait a minute before looking up policies again.'});return;}
+    active++;
+    try{res.set('Cache-Control','no-store').json(await policyDraftsFor(input.data.url));}
+    catch(e){res.status(422).json({error:e instanceof Error?e.message:'Website policies could not be retrieved.'});}
+    finally{active--;}
   });
   app.get('/api/gateway/status',(_req,res)=>res.json(gatewayStatus()));
   let shopperCount=0;let shopperReset=Date.now()+3600000;

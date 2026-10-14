@@ -12,9 +12,17 @@
 - [x] Deploy on Vercel after confirmation, configure the monitored storefront and cron secret, and verify useful unattended work through a protected Cron test run. Vercel shows the enabled 09:00 UTC schedule; the test run emitted a successful Daily audit log. Organizer qualification is not guaranteed.
 - [ ] Durable unattended snapshots and regression alerts are deferred. The UI states that scheduled history is not stored.
 
-No paid model call, purchase, cart, checkout, live Shopify edit, or persistent infrastructure was initiated. Official track and side-quest requirements and deployment instructions are recorded in README.md.
+One explicit production shopper verification request was made earlier. No purchase, cart, checkout, or live Shopify edit was initiated. Official track and side-quest requirements and deployment instructions are recorded in README.md.
 
 - [x] Redesign the workspace with larger readable typography, a lighter sidebar, clearer navigation labels, a visible three-step workflow, and the first missing-signal preview open by default.
 - [x] Show affected-product thumbnails and exact missing fields; distinguish absent image URLs from actual image loading failures.
 - [x] Add opt-in AI Gateway semantic comparison with one 550-output-token request, grounded eligibility revalidation, request telemetry, and zero-call fallback. Production verified with one request and 665 tokens.
 - [x] Fix the user-provided Motoring Club URL: extract public Squarespace cards, preserve unknown stock/currency facts, discover up to two same-store product links when needed, and show a clear empty-product state. Local exact-URL verification found 24 products; 19 regression tests pass.
+
+## Merchant-facing refinement
+
+- [x] On the first page, remove the simulated score. Put steps 1, 2, and 3 at the top, on one line, with clearer copy: Check your store → Review missing details → Preview improvements. Keep the original store check separate from proposed changes.
+- [x] Make all interface text more readable, including secondary copy, controls, evidence notes, and mobile labels. Remove repeated mini-step instructions.
+- [x] In merchant fixes, prefill shipping and return policy text from the public website when actual passages are found; otherwise prefill clearly labeled suggestions. Show source links for website passages. Require review and an explicit apply action; do not automatically confirm unknown inventory or modify sold-out states.
+- [x] In preview mode, remove Gateway, model, token, latency, protocol, and execution jargon. Keep the shopper comparison merchant-facing and preserve the existing bounded semantic backend and fallback.
+- [ ] Deploy the verified refinement to the currently selected Vercel repository without changing the daily audit or secrets.
