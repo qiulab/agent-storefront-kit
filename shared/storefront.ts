@@ -1,9 +1,9 @@
 export type SignalKey = 'pricing' | 'stock' | 'image' | 'description' | 'shipping' | 'returns' | 'variants' | 'contact';
 export type Product = { id: string; title: string; description?: string; variants?: string[]; price: number | null; currency: string; available: boolean | null; image?: string; url?: string; source: string };
 export type Signal = { key: SignalKey; label: string; score: number; evidence: string; source: string; fix: string };
-export type Audit = { id: string; url: string; name: string; scannedAt: string; demo: boolean; products: Product[]; signals: Signal[]; score: number; rawText: string; trace: { tool: string; detail: string; status: string }[]; mcp?: { endpoint: string; connected: boolean; tools: string[]; error?: string } };
+export type Audit = { id: string; url: string; name: string; scannedAt: string; demo: boolean; products: Product[]; signals: Signal[]; score: number; rawText: string; trace: { tool: string; detail: string; status: string }[]; mcp?: { endpoint: string; connected: boolean; tools: string[]; error?: string; warnings?: string[]; guidance?: string[] } };
 export type Steering = { shipping: string; returns: string; stock: string; guidance: string; preferredProduct: string; budget: number; hiddenProductIds: string[]; discountEnabled: boolean; question: string };
-export const emptySteering: Steering = { shipping: '', returns: '', stock: '', guidance: '', preferredProduct: '', budget: 150, hiddenProductIds: [], discountEnabled: false, question: 'Find the cheapest product under $150.' };
+export const emptySteering: Steering = { shipping: '', returns: '', stock: '', guidance: '', preferredProduct: '', budget: 50, hiddenProductIds: [], discountEnabled: false, question: 'What’s the best birthday gift under $50?' };
 export function effectiveSignals(audit: Audit, steer: Steering): Signal[] {
   return audit.signals.map(s => {
     const value = s.key === 'shipping' ? steer.shipping : s.key === 'returns' ? steer.returns : s.key === 'stock' ? steer.stock : '';
@@ -24,4 +24,8 @@ export function simulate(audit: Audit, steer: Steering) {
   if (!product) blockers.push('No visible product with a verified USD price fits the budget.');
   const ready = blockers.length === 0;
   return { ready, product, effectivePrice: product ? priceFor(product,steer) : null, blockers, score: readiness(signals), decision: ready ? `Recommend ${product!.title}` : 'Need a little more context', reason: ready ? `The selected product fits the $${budget} cap and the feed includes stock, shipping, and returns context. This is a recommendation, not a purchase.` : 'I found a candidate, but cannot recommend buying until the missing commerce facts are clarified.', steps: [ { tool: 'inspect_storefront', detail: `Read ${audit.products.length} products and 8 commerce checks.` }, { tool: 'evaluate_constraints', detail: `USD budget $${budget}; ${eligible.length} candidates. ${steer.hiddenProductIds.length} hidden; ${steer.discountEnabled ? '10% preview discount applied' : 'original prices used'}. Only budget and cheapest intent are parsed; no semantic product matching.` }, { tool: 'resolve_merchant_context', detail: steer.shipping || steer.returns || steer.stock || steer.guidance ? 'Applied labeled merchant preview context. No live store changes.' : 'No overrides. Use discovered evidence only.' }, { tool: 'purchase_decision', detail: ready ? `Recommend ${product!.title}. No cart or checkout created.` : `${blockers.length} blockers. Ask merchant for clarification.` } ] };
+}
+
+export function steeringFor(audit: Pick<Audit, 'name'>): Steering {
+  return { ...emptySteering, hiddenProductIds: [], question: `What’s the best birthday gift under $50 from ${audit.name}?` };
 }

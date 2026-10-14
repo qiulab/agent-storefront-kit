@@ -7,9 +7,9 @@ describe('storefront audit',()=>{
   it('reports malformed structured data',()=>{expect(extractHTML('<script type="application/ld+json">bad</script>','https://example.com').malformed).toBe(true);});
   it('does not pass product checks on an empty catalog',()=>{expect(scoreProducts([],'','test').filter(s=>s.score===100)).toHaveLength(0);});
   it('keeps the audit score separate from merchant previews',()=>{const a=demoAudit();const s={...emptySteering,stock:'In stock',shipping:'Ships in 3 days',returns:'30-day returns'};expect(a.score).toBe(63);expect(readiness(effectiveSignals(a,s))).toBe(100);expect(a.score).toBe(63);expect(simulate(a,emptySteering).ready).toBe(false);expect(simulate(a,s).ready).toBe(true);});
-  it('changes price under a reversible 10% discount',()=>{const a=demoAudit();const s={...emptySteering,discountEnabled:true};expect(priceFor(a.products[1],s)).toBe(61.2);expect(a.products[1].price).toBe(68);});
-  it('hides the cheapest item and picks the next eligible product',()=>{const a=demoAudit();expect(simulate(a,emptySteering).product?.id).toBe('tote');expect(simulate(a,{...emptySteering,hiddenProductIds:['tote']}).product?.id).toBe('pack');});
-  it('honors the dollar cap in the question',()=>{const a=demoAudit();expect(simulate(a,{...emptySteering,question:'cheapest under $60'}).product).toBeUndefined();});
+  it('changes price under a reversible 10% discount',()=>{const a=demoAudit();const s={...emptySteering,discountEnabled:true};expect(priceFor(a.products[1],s)).toBe(43.2);expect(a.products[1].price).toBe(48);});
+  it('hides the cheapest item and picks the next eligible product',()=>{const a=demoAudit();const steer={...emptySteering,question:'Find the cheapest product under $150.',budget:150};expect(simulate(a,steer).product?.id).toBe('tote');expect(simulate(a,{...steer,hiddenProductIds:['tote']}).product?.id).toBe('pack');});
+  it('honors the dollar cap in the question',()=>{const a=demoAudit();expect(simulate(a,{...emptySteering,question:'cheapest under $40'}).product).toBeUndefined();});
 });
 
 describe('public HTML product cards',()=>{

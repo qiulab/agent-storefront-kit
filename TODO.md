@@ -28,3 +28,10 @@ One explicit production shopper verification request was made earlier. No purcha
 - [x] Deploy the verified refinement to the currently selected Vercel repository without changing the daily audit or secrets.
 
 - [x] Remove extra status and promotional copy, including “Your live store is safe,” repeated reassurance, the sidebar pitch, fake profile footer, and duplicated tagline.
+
+## Hackathon qualification and video
+
+- [ ] Retain Vercel deployment and the protected daily schedule. Show completed background-check summaries in the merchant monitoring screen, including execution time, target store, completed work, score, and actionable gaps. Store derived audit summaries only, never cached Shop products, product URLs, prices, raw catalog responses, or merchant images.
+- [ ] Keep live Shop MCP discovery and exact returned product URLs. Never reopen Shop result objects from saved run history or export them as a cached catalog. Refresh Shop data for each Shopify shopper comparison. Show every returned Shop warning in merchant-facing language, including preview mode; preserve a visible HTML fallback when Shop cannot supply the store.
+- [ ] Preserve the clean merchant interface and existing explicit-apply draft controls. Remove the “How it works” link and “A sample of your store—not a full-site audit” text requested by the user.
+- [ ] Produce a screen-recorded, narrated demo of the working app under three minutes, showing the problem, real storefront extraction, live Shop MCP commerce, merchant steering, and observable scheduled execution. Deliver a playable MP4 and accurate submission instructions; do not fabricate app behavior, generate a fake UI, upload a public video, or submit an entry without authorization.
