@@ -2,7 +2,7 @@ import { get, list, put } from '@vercel/blob';
 import type { BackgroundReport } from '../shared/backgroundReports.js';
 
 export function reportStorageConfigured() {
-  return !!(process.env.BLOB_READ_WRITE_TOKEN || (process.env.BLOB_STORE_ID && process.env.VERCEL_OIDC_TOKEN));
+  return !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
 export async function saveBackgroundReport(report: BackgroundReport) {

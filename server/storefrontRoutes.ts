@@ -49,7 +49,7 @@ export function registerStorefrontRoutes(app:Express) {
   app.get('/api/monitor/status',async(_req,res)=>{
     let reports:BackgroundReport[]=[];let historyError=false;
     try {reports=await recentBackgroundReports();} catch {historyError=true;}
-    res.set('Cache-Control','no-store').json({configured:!!process.env.MONITORED_STORE_URL,cronProtected:!!process.env.CRON_SECRET,persistentHistory:reportStorageConfigured(),storeUrl:process.env.MONITORED_STORE_URL,query:process.env.MONITORED_CATALOG_QUERY,schedule:'0 9 * * *',reports,historyError});
+    res.set('Cache-Control','no-store').json({configured:!!(process.env.MONITORED_STORE_URL&&process.env.CRON_SECRET),targetConfigured:!!process.env.MONITORED_STORE_URL,cronProtected:!!process.env.CRON_SECRET,persistentHistory:reportStorageConfigured(),storeUrl:process.env.MONITORED_STORE_URL,query:process.env.MONITORED_CATALOG_QUERY,schedule:'0 9 * * *',reports,historyError});
   });
   app.get('/api/cron',async(req,res)=>{
     if(!process.env.CRON_SECRET||req.headers.authorization!==`Bearer ${process.env.CRON_SECRET}`) {res.status(401).json({error:'Cron authorization required.'});return;}
