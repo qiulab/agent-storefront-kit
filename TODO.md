@@ -37,4 +37,4 @@ One explicit production shopper verification request was made earlier. No purcha
 - [x] Produce a screen-recorded, narrated demo of the working app under three minutes, showing the problem, real storefront extraction, live Shop MCP commerce, merchant steering, and observable scheduled execution. Deliver a playable MP4 and accurate submission instructions; do not fabricate app behavior, generate a fake UI, upload a public video, or submit an entry without authorization.
 
 - [x] Include the Motoring Coffee section in the finished 2:15 narrated MP4 and add labeled store-check, merchant-fix, shopping-agent, and background-check screenshots to the README.
-- [ ] Make qiulab/agent-storefront-kit public after the user reviews the exact repository payload and confirms visibility.
+- [x] Make qiulab/agent-storefront-kit public after the user reviews the exact repository payload and confirms visibility. Approved and verified October 14, 2026.
