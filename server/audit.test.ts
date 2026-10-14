@@ -11,3 +11,10 @@ describe('storefront audit',()=>{
   it('hides the cheapest item and picks the next eligible product',()=>{const a=demoAudit();expect(simulate(a,emptySteering).product?.id).toBe('tote');expect(simulate(a,{...emptySteering,hiddenProductIds:['tote']}).product?.id).toBe('pack');});
   it('honors the dollar cap in the question',()=>{const a=demoAudit();expect(simulate(a,{...emptySteering,question:'cheapest under $60'}).product).toBeUndefined();});
 });
+
+describe('public HTML product cards',()=>{
+  const html='<script>window.context={"selectedCurrency":"USD"};</script><div class="product-block-content"><a class="product-title" href="/shop-all/p/coffee">Coffee beans</a><img data-src="/coffee.jpg"/><div class="product-price">$20.00</div><div class="product-excerpt">Organic whole bean coffee with chocolate tasting notes and a medium roast.</div><button>Add to cart</button></div>';
+  it('extracts Squarespace card facts without Product JSON-LD',()=>{const d=extractHTML(html,'https://example.com/shop');expect(d.products).toHaveLength(1);expect(d.products[0].price).toBe(20);expect(d.products[0].currency).toBe('USD');expect(d.products[0].url).toBe('https://example.com/shop-all/p/coffee');expect(d.products[0].image).toBe('https://example.com/coffee.jpg');});
+  it('does not treat an add-to-cart button as verified inventory',()=>{const p=extractHTML(html,'https://example.com/shop').products[0];expect(p.available).toBe(null);expect(p.variants).toEqual([]);});
+  it('does not infer USD from a dollar sign alone',()=>{const d=extractHTML(html.replace('"selectedCurrency":"USD"','"unrelated":"USD"'),'https://example.com/shop');expect(d.products[0].currency).toBe('');expect(scoreProducts(d.products,d.text,'test').find(s=>s.key==='pricing')?.score).toBe(0);});
+});

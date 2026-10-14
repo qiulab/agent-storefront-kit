@@ -34,6 +34,22 @@ export function extractHTML(html: string, url: string): { products: Product[]; t
     Object.values(obj).forEach(walk);
   }
   $('script[type="application/ld+json"]').each((_i,el)=>{try {walk(JSON.parse($(el).text()));} catch {malformed=true;} });
+  if(!products.length) {
+    const currency=$('meta[property="product:price:currency"],meta[itemprop="priceCurrency"]').first().attr('content')||html.match(/"selectedCurrency"\s*:\s*"([A-Z]{3})"/)?.[1]||html.match(/"defaultCurrency"\s*:\s*"([A-Z]{3})"/)?.[1]||'';
+    $('.product-block-content,.product-list-item,.ProductList-item,li.product,[itemtype$="/Product"]').each((i,el)=>{
+      const card=$(el);const titleElement=card.find('.product-title,.ProductList-title,.product-list-item-title,.woocommerce-loop-product__title,[itemprop="name"]').first();
+      const title=titleElement.text().replace(/\s+/g,' ').trim();
+      const link=titleElement.attr('href')||titleElement.closest('a').attr('href')||card.find('a[href]').first().attr('href');
+      const priceElement=card.find('.sale-price,.price ins,[itemprop="price"],.product-price,.product-list-item-price,.price').first();
+      const priceText=priceElement.attr('content')||priceElement.text();const amount=priceText.replace(/,/g,'').match(/\d+(?:\.\d{1,2})?/);
+      if(!title||!link||!amount)return;
+      const image=card.find('img').first();const imageUrl=image.attr('data-src')||image.attr('data-image')||image.attr('src');
+      const status=card.find('.product-status,.sold-out,.out-of-stock,[itemprop="availability"]').text()+' '+(card.find('[itemprop="availability"]').attr('href')||'');
+      const description=card.find('.product-excerpt,[itemprop="description"],.woocommerce-product-details__short-description').first().text().replace(/\s+/g,' ').trim();
+      const variants=card.find('select option').map((_i,o)=>$(o).text().trim()).get().filter(v=>v&&!/^(choose|select)/i.test(v));
+      products.push({id:card.attr('data-item-id')||card.attr('data-product-id')||`html-product-${i}`,title,description:description||undefined,price:Number(amount[0]),currency,available:/sold.?out|out.?of.?stock|OutOfStock/i.test(status)?false:/InStock/.test(status)?true:null,variants,image:imageUrl?new URL(imageUrl,url).href:undefined,url:new URL(link,url).href,source:html.includes('squarespace')?'Squarespace public product card':'Public HTML product card'});
+    });
+  }
   $('script,style,noscript,svg,nav').remove();
   const links = $('a').map((_i,el)=>`${$(el).text()} ${$(el).attr('href')||''}`).get().join('\n');
   const text = $('body').text().replace(/\s+/g,' ').trim()+'\n'+links;
@@ -45,7 +61,15 @@ export async function analyzeStore(input: string): Promise<Audit> {
   if (response.status === 401 || response.status === 403 || response.status === 429) throw new Error(`Storefront blocked the audit (HTTP ${response.status}). Try a public product page.`);
   if (response.status >= 400) throw new Error(`Storefront returned HTTP ${response.status}. Check the URL.`);
   const data = extractHTML(response.text,response.url);
-  if (!data.products.length) throw new Error(data.malformed ? 'Malformed Product JSON-LD found. Fix the structured data or try another product page.' : 'No Product JSON-LD found. This may be a JavaScript-only or unsupported storefront. Try a public product detail page.');
-  const signals = scoreProducts(data.products,data.text,'Public HTML · sampled page');
-  return { id: crypto.randomUUID(), url:response.url, name:data.name, scannedAt:new Date().toISOString(), demo:false, products:data.products, signals, score:readiness(signals), rawText:data.text, trace:[{tool:'fetch_storefront',detail:`HTTP ${response.status}; fetched public HTML without executing JavaScript.`,status:'complete'},{tool:'extract_product_schema',detail:`${data.products.length} Product JSON-LD entries normalized. Audit covers this page, not the full catalog.`,status:'complete'},{tool:'inspect_commerce_policies',detail:'Checked page text and policy links. Link discovery does not guarantee policy completeness.',status:'complete'},{tool:'score_readiness',detail:`${signals.filter(s=>s.score===100).length}/8 deterministic checks passed.`,status:'complete'}] };
+  const discovery:Audit['trace']=[];
+  if(!data.products.length) {
+    const $=cheerio.load(response.text);const origin=new URL(response.url).origin;
+    const links=Array.from(new Set($('a[href]').map((_i,a)=>{try {const u=new URL($(a).attr('href')!,response.url);return u.origin===origin&&/\/(?:products?|p)\//i.test(u.pathname)?u.href:'';}catch{return '';}}).get().filter(Boolean))).slice(0,2);
+    const pages=await Promise.all(links.map(async link=>{try {const r=await publicFetch(link);return r.status<400?extractHTML(r.text,r.url):null;}catch{return null;}}));
+    const found=pages.flatMap(p=>p?.products||[]);data.products=Array.from(new Map(found.map(p=>[p.url+'|'+p.title,p])).values()).slice(0,24);data.text=(data.text+'\n'+pages.map(p=>p?.text||'').join('\n')).slice(0,40000);
+    if(links.length)discovery.push({tool:'discover_product_pages',detail:`No product facts on the first page. Followed ${links.length} same-store product links; found ${data.products.length} products.`,status:data.products.length?'complete':'warning'});
+  }
+  const source=data.products.some(p=>p.source.includes('product card'))?'Public HTML · product cards':'Public HTML · sampled page';
+  const signals = scoreProducts(data.products,data.text,source);
+  return { id: crypto.randomUUID(), url:response.url, name:data.name, scannedAt:new Date().toISOString(), demo:false, products:data.products, signals, score:readiness(signals), rawText:data.text, trace:[{tool:'fetch_storefront',detail:`HTTP ${response.status}; fetched public HTML without executing JavaScript.`,status:'complete'},...discovery,{tool:'extract_product_facts',detail:data.products.length?`${data.products.length} retrieved products normalized from ${source}. Coverage is sampled, not the full catalog.`:'No product schema or supported product cards exposed. Product-level checks remain failed; try a product-detail URL or Shop MCP. No facts invented.',status:data.products.length?'complete':'warning'},{tool:'inspect_commerce_policies',detail:'Checked page text and policy links. Link discovery does not guarantee policy completeness.',status:'complete'},{tool:'score_readiness',detail:`${signals.filter(s=>s.score===100).length}/8 deterministic checks passed.`,status:'complete'}] };
 }
