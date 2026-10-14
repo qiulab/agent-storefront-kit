@@ -25,4 +25,6 @@ One explicit production shopper verification request was made earlier. No purcha
 - [x] Make all interface text more readable, including secondary copy, controls, evidence notes, and mobile labels. Remove repeated mini-step instructions.
 - [x] In merchant fixes, prefill shipping and return policy text from the public website when actual passages are found; otherwise prefill clearly labeled suggestions. Show source links for website passages. Require review and an explicit apply action; do not automatically confirm unknown inventory or modify sold-out states.
 - [x] In preview mode, remove Gateway, model, token, latency, protocol, and execution jargon. Keep the shopper comparison merchant-facing and preserve the existing bounded semantic backend and fallback.
-- [ ] Deploy the verified refinement to the currently selected Vercel repository without changing the daily audit or secrets.
+- [x] Deploy the verified refinement to the currently selected Vercel repository without changing the daily audit or secrets.
+
+- [x] Remove extra status and promotional copy, including “Your live store is safe,” repeated reassurance, the sidebar pitch, fake profile footer, and duplicated tagline.

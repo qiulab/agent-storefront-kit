@@ -43,7 +43,7 @@ export default function MerchantFixes({ audit, steer, onApply, onClear }: Props)
   }
   return <section className="steer-panel merchant-fixes">
     <div className="panel-heading"><SlidersHorizontal size={18} /><h2>Your proposed improvements</h2><span className="pill amber">Draft only</span></div>
-    <div className="preview-warning"><ShieldCheck size={18} /><p>We’ve prepared a starting point. Review each detail, then use it in your preview. Nothing changes on your live store.</p></div>
+    <div className="preview-warning"><ShieldCheck size={18} /><p>Review these drafts before using them in the preview.</p></div>
     <div className="prefill-status">{loading ? <><Loader2 size={15} className="spin" /> Finding policies on your website…</> : <><Check size={15} /> {lookupError ? 'Website lookup unavailable. Suggestions are ready to review.' : 'Your policy drafts are ready.'}</>}{!audit.demo && !loading && <button onClick={() => setRefresh(value => value + 1)} title="Look up website policies again"><RefreshCw size={14} /></button>}</div>
     <div className="control-fields">
       <label>Shipping & delivery{source('shipping')}<textarea value={shipping} disabled={loading} maxLength={850} onChange={event => { setShipping(event.target.value); setApplied(false); }} /></label>
