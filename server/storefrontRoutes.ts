@@ -22,7 +22,11 @@ export function registerStorefrontRoutes(app:Express) {
   app.get('/api/cron',async(req,res)=>{
     if(!process.env.CRON_SECRET||req.headers.authorization!==`Bearer ${process.env.CRON_SECRET}`) {res.status(401).json({error:'Cron authorization required.'});return;}
     if(!process.env.MONITORED_STORE_URL) {res.status(503).json({error:'MONITORED_STORE_URL is not configured.'});return;}
-    try {res.set('Cache-Control','no-store').json({audit:await shopAudit(process.env.MONITORED_STORE_URL),persistent:false});}
+    try {
+      const audit=await shopAudit(process.env.MONITORED_STORE_URL,process.env.MONITORED_CATALOG_QUERY||'rain jacket');
+      console.info('[Daily audit]',JSON.stringify({at:audit.scannedAt,store:audit.name,score:audit.score,products:audit.products.length,shopMcp:audit.mcp?.connected||false}));
+      res.set('Cache-Control','no-store').json({audit,persistent:false});
+    }
     catch(e){res.status(422).json({error:e instanceof Error?e.message:'Refresh failed.'});}
   });
 }
