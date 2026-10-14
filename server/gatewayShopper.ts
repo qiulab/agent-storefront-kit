@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { emptySteering, priceFor, simulate, type Audit, type Steering } from '../shared/storefront';
+import { emptySteering, priceFor, simulate, type Audit, type Steering } from '../shared/storefront.js';
 const output=z.object({before:z.object({productId:z.string().nullable(),explanation:z.string().max(650)}),after:z.object({productId:z.string().nullable(),explanation:z.string().max(650)})});
 export function gatewayStatus(){return {configured:process.env.AI_GATEWAY_ENABLED==='true'&&!!(process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN),model:process.env.AI_GATEWAY_MODEL||'openai/gpt-4.1-mini',maxOutputTokens:550,callsPerComparison:1};}
 export async function gatewayCompare(audit:Audit,steer:Steering) {

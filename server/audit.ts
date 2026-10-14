@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
-import type { Audit, Product, Signal } from '../shared/storefront';
-import { readiness } from '../shared/storefront';
-import { publicFetch } from './publicFetch';
+import type { Audit, Product, Signal } from '../shared/storefront.js';
+import { readiness } from '../shared/storefront.js';
+import { publicFetch } from './publicFetch.js';
 
 export function scoreProducts(products: Product[], text: string, source: string): Signal[] {
   const all = (fn: (p: Product) => boolean) => products.length > 0 && products.every(fn);

@@ -1,6 +1,6 @@
-import type { Audit, Product } from '../shared/storefront';
-import { readiness } from '../shared/storefront';
-import { scoreProducts } from './audit';
+import type { Audit, Product } from '../shared/storefront.js';
+import { readiness } from '../shared/storefront.js';
+import { scoreProducts } from './audit.js';
 export function demoAudit(): Audit {
   const products:Product[]=[
     {id:'weekender',title:'The Everyday Weekender',description:'A durable canvas weekender made for short trips, everyday errands, and carrying everything comfortably.',variants:['Natural canvas'],price:128,currency:'USD',available:null,image:'/demo/canvas-pack.jpg',source:'Demo Product JSON-LD'},

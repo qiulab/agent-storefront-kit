@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio';
-import type { Audit, Product } from '../shared/storefront';
-import { readiness } from '../shared/storefront';
-import { publicFetch } from './publicFetch';
-import { scoreProducts, analyzeStore } from './audit';
+import type { Audit, Product } from '../shared/storefront.js';
+import { readiness } from '../shared/storefront.js';
+import { publicFetch } from './publicFetch.js';
+import { scoreProducts, analyzeStore } from './audit.js';
 const SHOP='https://mcp.shop.com/';
 const meta={'io.modelcontextprotocol/protocolVersion':'2026-07-28','io.modelcontextprotocol/clientInfo':{name:'agent-storefront-kit',version:'1.0.0'},'io.modelcontextprotocol/clientCapabilities':{}};
 async function rpc(endpoint:string,method:string,params:Record<string,any>) {

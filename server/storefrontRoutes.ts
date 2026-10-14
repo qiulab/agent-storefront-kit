@@ -1,9 +1,9 @@
 import type { Express } from 'express';
 import { z } from 'zod';
-import { analyzeStore } from './audit';
-import { shopAudit } from './shopMcp';
-import { demoAudit } from './demo';
-import { gatewayCompare, gatewayStatus } from './gatewayShopper';
+import { analyzeStore } from './audit.js';
+import { shopAudit } from './shopMcp.js';
+import { demoAudit } from './demo.js';
+import { gatewayCompare, gatewayStatus } from './gatewayShopper.js';
 const inputSchema=z.object({url:z.string().min(3).max(2000),shopify:z.boolean().optional(),query:z.string().max(200).optional()});
 export function registerStorefrontRoutes(app:Express) {
   let active=0; const limits=new Map<string,{count:number,until:number}>();
