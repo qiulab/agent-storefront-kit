@@ -10,13 +10,15 @@ Shopify handling must fetch results live, avoid caching Shop results or re-hosti
 
 The app is deployed at https://agent-storefront-kit.vercel.app. Its protected Vercel Cron job runs daily at 09:00 UTC, invokes live catalog discovery, evaluates eight store checks, and produces a summary without a manual prompt. The existing merchant preview steers product visibility, featured-product preference, proposed policies, and a hypothetical offer; the shopper comparison uses AI Gateway with grounded price, currency, inventory, and product-ID checks.
 
-The current implementation already supports live merchant-matched Shop discovery and preserves returned image and product URLs. Two gaps identified in this review are being corrected: completed background work should be visible in the merchant UI, and live Shop result objects must not be reopened from session history or exported as a cached catalog. Shopify warnings also need to remain visible in merchant preview mode.
+The qualification review corrected the identified gaps. Completed background work is visible under **Checks & history** and stored as private Blob operational summaries, not Shop catalog objects. Live Shop results are excluded from persisted history and product-data exports; each live Shopify comparison refreshes Shop MCP. All returned Shop warnings remain visible in merchant preview mode. Merchant image and product URLs stay unchanged.
+
+Verification on October 14, 2026: Vercel-triggered runs saved two real TOG24 reports, each checking a 16-product sample. The protected daily schedule is enabled at `0 9 * * *`. A production Gateway comparison made one model call and selected a $20 License Plate Frame from the actual Motoring Club website under the store-specific $50 birthday-gift cap. The final video records a later $30 Foam Trucker selection from the same website. Displayed stock facts remain source-based: unknown is not reported as confirmed availability. The regression suite has 28 passing tests.
 
 ## Required submission
 
 Submit under **Agents & Factories** by **4:00pm PT on October 14, 2026**. The portal remains open to 4:10pm only as a buffer. Supply the deployed demo, the chosen track, the team roster of at most four people, a problem/technology description, setup instructions, and a **YouTube demo of three minutes or less, Public or Unlisted**. Put the required video URL in Social Links and test it while signed out. Repository links are optional. [1]
 
-No submission or public video has been created by this review. Those remain required user entry steps. This document describes compliance evidence; organizers determine eligibility and the award outcome.
+A screen-recorded demo is included in the repository under `demo/`; it does not replace the required Public or Unlisted YouTube link. No event submission or public video upload has been made. Those remain required user entry steps. This document describes compliance evidence; organizers determine eligibility and the award outcome.
 
 ## References
 

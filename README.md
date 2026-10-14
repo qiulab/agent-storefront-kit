@@ -2,7 +2,7 @@
 
 **The merchant control panel for how shopping agents see a store.**
 
-[Open the Vercel app](https://agent-storefront-kit.vercel.app) · [Hackathon criteria](HACKATHON.md)
+[Open the Vercel app](https://agent-storefront-kit.vercel.app) · [Watch the narrated demo](demo/agent-storefront-kit-demo.mp4) · [Hackathon criteria](HACKATHON.md)
 
 ## User problem
 
@@ -82,7 +82,35 @@ Runtime configuration uses `AI_GATEWAY_API_KEY` or supported Vercel OIDC authent
 
 ## Demo video
 
-The finished screen-recorded MP4 will be included under `demo/`. It shows actual interactions with the Vercel production app, live storefront extraction, live Shop MCP discovery, reviewed merchant drafts, a real Gateway product selection, and completed background work. A repository-hosted video does not replace the required Public or Unlisted YouTube submission link.
+[Watch or download the narrated MP4](demo/agent-storefront-kit-demo.mp4). The video is approximately 2 minutes 14 seconds, with English narration and readable captions. It includes the requested [Motoring Coffee section](https://themotoringclub.com/shop#shop-motoring-coffee), actual Vercel-app interactions, live Shop MCP discovery, reviewed merchant drafts, a real Gateway birthday-gift selection, and completed background checks. The final recorded selection is a $30 Motoring Club Foam Trucker, with inventory explicitly unconfirmed. A repository-hosted video does not replace the required Public or Unlisted YouTube submission link.
+
+![Demo starting state; fictional fixture is labeled](demo/poster.png)
+
+## Screenshots
+
+### Store check
+
+The Motoring Club website sample, with source-derived readiness and suggested website fixes.
+
+![Store check and source evidence](demo/screenshots/store-check.png)
+
+### Merchant fixes
+
+Editable, prefilled drafts with source or suggestion labels, separate from the original check.
+
+![Prefilled merchant policy drafts](demo/screenshots/merchant-fixes.png)
+
+### Shopping-agent answer
+
+A real Gateway response using the store’s retrieved product feed and the $50 gift cap. Source prices and unknown inventory stay explicit.
+
+![Shopping-agent recommendation with unconfirmed inventory](demo/screenshots/shopping-agent.png)
+
+### Completed background checks
+
+Real Vercel-run TOG24 reports saved as operational summaries, not cached catalogs.
+
+![Completed unattended store checks](demo/screenshots/background-checks.png)
 
 ## Official resources
 

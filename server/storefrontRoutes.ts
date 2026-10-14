@@ -41,7 +41,7 @@ export function registerStorefrontRoutes(app:Express) {
     const input=schema.safeParse(req.body);if(!input.success){res.status(400).json({error:'The shopper feed or question is too large or invalid.'});return;}
     shopperCount++;
     try {
-      const sourceAudit = input.data.liveShop ? await shopAudit(input.data.audit.url, input.data.query) : input.data.audit.demo ? input.data.audit : await analyzeStore(input.data.audit.url);
+      const sourceAudit = input.data.liveShop ? await shopAudit(input.data.audit.url, input.data.query) : input.data.audit.demo ? demoAudit() : await analyzeStore(input.data.audit.url);
       const result = await gatewayCompare(sourceAudit, input.data.steer);
       res.set('Cache-Control','no-store').json({...result,...(!input.data.audit.demo ? {sourceAudit} : {})});
     } catch(e) {res.status(422).json({error:'The store could not be refreshed. Check the store and try again.'});}
