@@ -2,44 +2,36 @@
 
 **Watch what the agent sees, then change its mind.**
 
-A merchant control panel for public Product JSON-LD and live Shop MCP. Eight deterministic checks reveal the evidence an agent can retrieve. Reversible merchant previews compare shopper decisions without editing the live store. No model calls are required.
+Production app: https://agent-storefront-kit.vercel.app
 
-## Run and demo
+A merchant workspace that reads public storefront facts or official Shop MCP, scores eight evidence-based checks, previews merchant clarifications, and compares shopper decisions without editing the source store.
 
-`pnpm install --frozen-lockfile` then `pnpm dev` (port 3000). Validate with `pnpm check`, `pnpm test`, and `pnpm build`.
+## Demo
 
-Start with the fictional Fieldwork Supply fixture: audited readiness **63**. Open **Steer controls**, click **Fill demo fixes**, then **Run shopper & compare**. Missing stock, shipping, and returns context becomes an eligible recommendation. Audited readiness stays 63; simulated readiness becomes 100. Enable the 10% preview discount: $68 becomes $61.20. Hide the cheapest item and the next candidate wins. **Reset demo** clears the preview.
+Open **Preview fixes → Fill demo fixes → Run shopper & compare**. The fictional demo's audited score stays **63**, while preview readiness reaches **100**. Enable the first-order discount: the $68 candidate becomes **$61.20**. Hide the cheapest product to change the candidate. **Reset demo** clears the preview.
 
-For a live store, enter its HTTPS URL and catalog query in the Shop connection dialog. Product pages work better than home pages for public JSON-LD extraction.
+The **Use AI Gateway** checkbox enables semantic product matching. One request compares both feeds using `openai/gpt-4.1-mini`, a 550-output-token limit and 12-second timeout. There is no retry loop. Returned product IDs, prices, visibility, currency, budget, and stock eligibility are checked in code. Scores and prices never come from a model. Disabled or failed Gateway calls use the deterministic fallback. A verified production comparison used one call and 665 total tokens.
 
-## PRD improvements adopted
+## Source coverage and issue previews
 
-The supplied PRD improves the initial scope with eight explainable checks, an explicit preview/source separation, and scheduled-work criteria. This implementation adds evidence and concrete source fixes per check, separate audited and simulated scores, and an explanation of why the answer changed. Visibility, discount, announcement, shipping, returns, and availability controls remain preview-only.
+The scanner supports Product JSON-LD, explicit public product-card markup (including Squarespace), and discovery of up to two same-store product links when a landing page has no product facts. It does not execute arbitrary storefront JavaScript or claim full-catalog coverage. Empty pages become an explainable zero-product audit rather than an obstructive error.
 
-The shopper parses USD budget and cheapest intent over the existing feed; it is not an unrestricted semantic-search model. Merchant announcements are included in the preview context but do not override grounded price or inventory. A sampled page or featured-variant result set cannot prove full catalog completeness.
+The user-provided test URL `https://themotoringclub.com/shop#shop-motoring-coffee` was verified locally: 24 products were extracted from Squarespace HTML cards. Numeric prices and currency come from exposed markup/site currency context, not a dollar-sign assumption. A generic Add to cart button does not establish inventory; absent stock and variant evidence remain unknown and fail their checks.
 
-## Shop MCP
+Expand a readiness check to see affected-product thumbnails, the exact missing field, the evidence source, and a concrete source fix. Image absence is separate from an actual image loading failure. The first failed check opens automatically. Store-level policy gaps show which products depend on that context, without claiming the merchant has no policy.
 
-The official endpoint is `https://mcp.shop.com/`. Requests use protocol `2026-07-28`, client metadata, discovered tool schemas, merchant filters, and exact merchant-domain matching. Prices are converted from currency minor units. Product URLs stay exactly as returned. Live merchant images use their returned URLs and are never re-hosted. Shop results are not persisted in browser storage. Returned warnings are displayed.
+## Shop MCP and daily audit
 
-The adapter calls only `tools/list` and read-only `search_catalog`. A merchant policy tool at `/api/mcp` can enrich shipping and refund context. Unavailable or unmatched Shop results explicitly fall back to public HTML. No carts, checkouts, orders, customer records, or payments are created. Verified live Shop integration: https://www.tog24.com with query “rain jacket” returned 16 exact-domain matched products. Allbirds queries returned upstream errors; HTML fallback was verified and is labeled honestly.
+The official endpoint is `https://mcp.shop.com/`. Read-only requests use discovered schemas, protocol/client metadata, merchant filters, and exact merchant-domain matching. Prices are converted from currency minor units, URLs remain unchanged, and live media is never re-hosted. Shop results are not persisted in browser storage. Warnings and HTML fallback are explicit. TOG24 with query “rain jacket” was verified with 16 merchant-matched products.
 
-## Deployment and qualification
+Vercel Cron is enabled for **09:00 UTC daily** (`0 9 * * *`). Production configuration targets `https://www.tog24.com` with catalog query `rain jacket`. The cron endpoint rejects requests without its protected bearer secret. A verification run through Vercel's Cron interface produced a successful `[Daily audit]` runtime log. The hook re-audits without a new prompt, but does **not** persist unattended historical snapshots; durable history and regression alerts are deferred.
 
-The official **Agents & Factories** track requires Vercel deployment, asynchronous or scheduled/event-driven work, useful work without a prompt for every step, and human monitoring/steering. The Shopify side quest requires **Shop MCP**, not merely a store-specific Shopify MCP endpoint.
+The project is deployed on Vercel and designed around Agents & Factories and the Shop MCP side quest. Final hackathon qualification is determined by the organizers, not this app.
 
-`api/` exposes Vercel-compatible functions; the frontend builds to `dist/public`. `vercel.json` declares a daily cron at 09:00 UTC. Set `MONITORED_STORE_URL` and a protected `CRON_SECRET`. `GET /api/cron` is fail-closed unless bearer authorization matches the secret. It returns a fresh audit; it does **not** persist unattended history. The dashboard labels monitoring as setup-required until configured. A code declaration is not proof of an executed schedule. **Track qualification is not claimed until Vercel deployment and useful unattended execution are verified.**
+## Development and boundaries
 
-Persistent snapshots, regression alerts, and multi-store accounts are deferred. Manual public-HTML history uses browser-local storage only. No paid account upgrade or persistent infrastructure has been started.
+`pnpm install --frozen-lockfile`, then `pnpm dev` (port 3000). `pnpm check`, `pnpm test`, and `pnpm build` validate the source. The regression suite currently has **19 passing tests**. Vercel function imports use Node-compatible `.js` specifiers; the compiled Node ESM API tree was smoke-tested locally.
 
-HTTPS-only fetches pin validated DNS addresses, reject private networks, and cap redirects, timeouts, size, concurrency, and request rates.
+No cart, checkout, order, purchase, or live merchant edit is performed. Manual public-HTML history is browser-local. Public fetches validate and pin DNS, reject private networks, and bound redirects, size, timeout, rate, and concurrency. Gateway rate limits are per runtime instance, not a durable account-wide spending cap. API keys and cron secrets are server-only and never committed.
 
-## References
-
-Event Tracks and Shopify tabs: https://vercel.notion.site/Builder-Resources-Fast-Forward-3f3e06b059c4818eba9ada18e6f32dc0
-
-Shop MCP: https://shop.dev/docs/quickstart and https://shop.dev/docs/tools
-
-Shopify store policy MCP: https://shopify.dev/docs/apps/build/storefront-mcp
-
-Demo product photos are illustrative images, separate from live Shop media and not claims about actual merchant products.
+Official references: [event resources](https://vercel.notion.site/Builder-Resources-Fast-Forward-3f3e06b059c4818eba9ada18e6f32dc0), [Shop MCP](https://shop.dev/docs/quickstart), [AI Gateway](https://vercel.com/docs/ai-gateway/openai-compat).
