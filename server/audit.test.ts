@@ -18,3 +18,9 @@ describe('public HTML product cards',()=>{
   it('does not treat an add-to-cart button as verified inventory',()=>{const p=extractHTML(html,'https://example.com/shop').products[0];expect(p.available).toBe(null);expect(p.variants).toEqual([]);});
   it('does not infer USD from a dollar sign alone',()=>{const d=extractHTML(html.replace('"selectedCurrency":"USD"','"unrelated":"USD"'),'https://example.com/shop');expect(d.products[0].currency).toBe('');expect(scoreProducts(d.products,d.text,'test').find(s=>s.key==='pricing')?.score).toBe(0);});
 });
+
+describe('observed sold-out inventory',()=>{
+  const html='<script>{"selectedCurrency":"USD"}</script><div class="product-block-content"><a class="product-title" href="/shop-all/p/tumbler">Fellow Cold Tumbler</a><div class="product-price">$40.00</div><a class="product-status-link"><div class="product-mark sold-out">Sold out</div></a></div>';
+  it('recognizes the exact public sold-out badge and treats it as known stock',()=>{const d=extractHTML(html,'https://example.com/shop');expect(d.products[0].available).toBe(false);const signal=scoreProducts(d.products,d.text,'test').find(s=>s.key==='stock')!;expect(signal.score).toBe(100);expect(signal.evidence).toContain('1 sold out, 0 unknown');});
+  it('never recommends a sold-out product after a merchant stock preview',()=>{const a=demoAudit();a.products=a.products.map(p=>({...p,available:false}));expect(simulate(a,{...emptySteering,stock:'Everything in stock',shipping:'3 days',returns:'30 days'}).product).toBeUndefined();});
+});
