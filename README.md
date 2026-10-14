@@ -82,7 +82,7 @@ Runtime configuration uses `AI_GATEWAY_API_KEY` or supported Vercel OIDC authent
 
 ## Demo video
 
-[Watch or download the narrated MP4](demo/agent-storefront-kit-demo.mp4). The video is approximately 2 minutes 14 seconds, with English narration and readable captions. It includes the requested [Motoring Coffee section](https://themotoringclub.com/shop#shop-motoring-coffee), actual Vercel-app interactions, live Shop MCP discovery, reviewed merchant drafts, a real Gateway birthday-gift selection, and completed background checks. The final recorded selection is a $30 Motoring Club Foam Trucker, with inventory explicitly unconfirmed. A repository-hosted video does not replace the required Public or Unlisted YouTube submission link.
+[Watch or download the narrated MP4](demo/agent-storefront-kit-demo.mp4) · [Audio script](demo/narration.txt) · [Caption file for YouTube](demo/captions.srt). The video is approximately 2 minutes 15 seconds, with English narration and optional English captions. It includes the requested [Motoring Coffee section](https://themotoringclub.com/shop#shop-motoring-coffee), actual Vercel-app interactions, live Shop MCP discovery, reviewed merchant drafts, a real Gateway birthday-gift selection, and completed background checks. The final recorded selection is a $30 Motoring Club Foam Trucker, with inventory explicitly unconfirmed. A repository-hosted video does not replace the required Public or Unlisted YouTube submission link.
 
 ![Demo starting state; fictional fixture is labeled](demo/poster.png)
 

@@ -1,0 +1,112 @@
+1
+00:00:00,100 --> 00:00:05,587
+Merchants don’t know which missing details keep shopping agents from recommending their products.
+
+2
+00:00:05,537 --> 00:00:12,012
+Agent Storefront Kit reveals those gaps and lets merchants preview fixes before changing their website.
+
+3
+00:00:12,072 --> 00:00:14,422
+Start with a store URL.
+
+4
+00:00:14,422 --> 00:00:18,947
+This is a real public storefront, not a fabricated product feed.
+
+5
+00:00:18,947 --> 00:00:22,635
+The kit extracts products and checks eight signals.
+
+6
+00:00:22,635 --> 00:00:26,097
+Sold-out items are recognized as unavailable.
+
+7
+00:00:26,097 --> 00:00:30,060
+Missing information stays unknown instead of being invented.
+
+8
+00:00:30,060 --> 00:00:33,510
+For Shopify, connect the live catalog.
+
+9
+00:00:33,510 --> 00:00:40,410
+The kit uses official Shop M C P to find products from this merchant, with current prices and availability.
+
+10
+00:00:40,410 --> 00:00:43,485
+Product links stay exactly as returned.
+
+11
+00:00:43,485 --> 00:00:48,810
+Warnings remain visible, and live products are not saved as reusable history.
+
+12
+00:00:48,810 --> 00:00:52,547
+Next, review the suggested website fixes.
+
+13
+00:00:52,547 --> 00:00:56,697
+Shipping and returns are prefilled from the website when we find them.
+
+14
+00:00:56,697 --> 00:01:02,172
+Otherwise, the merchant gets an editable suggestion, clearly marked as a draft.
+
+15
+00:01:02,172 --> 00:01:07,147
+Proposed changes stay separate from the original check until the merchant applies them.
+
+16
+00:01:07,147 --> 00:01:11,322
+Ask for the best birthday gift under fifty dollars from this store.
+
+17
+00:01:11,322 --> 00:01:14,147
+The store name changes with the URL.
+
+18
+00:01:14,147 --> 00:01:17,922
+Preview the answer a customer would get from a shopping agent.
+
+19
+00:01:17,922 --> 00:01:21,822
+The language model evaluates the actual product feed.
+
+20
+00:01:21,822 --> 00:01:26,847
+The server checks its product choice, price, budget, and inventory.
+
+21
+00:01:26,847 --> 00:01:30,285
+If nothing fits, it does not invent a match.
+
+22
+00:01:30,285 --> 00:01:33,860
+Compare the current details with your proposed fixes.
+
+23
+00:01:33,860 --> 00:01:37,310
+The system also works after the merchant steps away.
+
+24
+00:01:37,310 --> 00:01:44,610
+A protected Vercel schedule searches the live catalog, evaluates the store, and saves a completed-check report.
+
+25
+00:01:44,610 --> 00:01:50,885
+The monitoring screen shows when the work happened, what was checked, and which website fixes to review.
+
+26
+00:01:50,885 --> 00:01:56,785
+Reports contain derived readiness information, not cached Shopify products or images.
+
+27
+00:01:56,785 --> 00:02:03,822
+Discover real products, review missing details, steer the shopping agent, and monitor useful background work.
+
+28
+00:02:03,822 --> 00:02:12,285
+Agent Storefront Kit runs on Vercel for the Agents and Factories track, with live Shop M C P commerce for the Shopify side quest.
+

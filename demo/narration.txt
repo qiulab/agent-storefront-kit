@@ -1,0 +1,13 @@
+Merchants don’t know which missing details keep shopping agents from recommending their products. Agent Storefront Kit reveals those gaps and lets merchants preview fixes before changing their website.
+
+Start with a store URL. This is a real public storefront, not a fabricated product feed. The kit extracts products and checks eight signals. Sold-out items are recognized as unavailable. Missing information stays unknown instead of being invented.
+
+For Shopify, connect the live catalog. The kit uses official Shop M C P to find products from this merchant, with current prices and availability. Product links stay exactly as returned. Warnings remain visible, and live products are not saved as reusable history.
+
+Next, review the suggested website fixes. Shipping and returns are prefilled from the website when we find them. Otherwise, the merchant gets an editable suggestion, clearly marked as a draft. Proposed changes stay separate from the original check until the merchant applies them.
+
+Ask for the best birthday gift under fifty dollars from this store. The store name changes with the URL. Preview the answer a customer would get from a shopping agent. The language model evaluates the actual product feed. The server checks its product choice, price, budget, and inventory. If nothing fits, it does not invent a match. Compare the current details with your proposed fixes.
+
+The system also works after the merchant steps away. A protected Vercel schedule searches the live catalog, evaluates the store, and saves a completed-check report. The monitoring screen shows when the work happened, what was checked, and which website fixes to review. Reports contain derived readiness information, not cached Shopify products or images.
+
+Discover real products, review missing details, steer the shopping agent, and monitor useful background work. Agent Storefront Kit runs on Vercel for the Agents and Factories track, with live Shop M C P commerce for the Shopify side quest.
